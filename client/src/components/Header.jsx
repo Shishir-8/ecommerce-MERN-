@@ -58,7 +58,7 @@ export default function Header() {
 
           {/* Left: Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-gray-800">E-comerce</span>
+            <span className="text-2xl font-bold text-gray-800">E-comm</span>
           </Link>
 
           {/* Center: Search Box */}
