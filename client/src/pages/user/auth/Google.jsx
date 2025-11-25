@@ -7,6 +7,7 @@ import { setUser } from '../../../redux/slice/authSlice'
 import toast, { LoaderIcon } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import Loader from '../../../components/Loader'
 
 export default function Google() {
   const dispatch = useDispatch()
@@ -29,6 +30,8 @@ export default function Google() {
           setLoading(false)
         }
     }
+
+    if(loading) return <Loader />
 
 
   return (

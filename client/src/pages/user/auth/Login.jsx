@@ -9,6 +9,7 @@ import { setUser } from "../../../redux/slice/authSlice";
 import toast from "react-hot-toast";
 import Spinner from "../../../components/Spinner";
 import api from "../../../axios";
+import Loader from "../../../components/Loader";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -68,6 +69,8 @@ export default function Login() {
       setLoading(false)
     }
   };
+
+  if(loading) return <Loader />
 
   return (
     <div className="py-20">

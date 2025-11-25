@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { clearUser, setUser } from "../../../redux/slice/authSlice";
 import toast from "react-hot-toast";
 import Spinner from "../../../components/Spinner";
+import Loader from "../../../components/Loader";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -70,6 +71,8 @@ export default function Register() {
       setLoading(false)
     }
   };
+
+  if(loading) return <Loader />
 
 
 
