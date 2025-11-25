@@ -34,6 +34,7 @@ export default function Google() {
 
   return (
     <button
+    onClick={handleGoogleLogin}
       type="submit"
       disabled={loading}
       className={`w-full py-2 rounded border border-gray-300 flex justify-center items-center gap-2 ${loading ? "bg-gray-400 cursor-not-allowed" : ""
