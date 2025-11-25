@@ -6,29 +6,35 @@ import FeaturedSection from './FeaturedSection'
 import EmailSubscription from './EmailSubscription'
 import { Link } from 'react-router-dom'
 import { LuMoveRight } from "react-icons/lu";
+import Loader from '../../components/Loader'
 
 
 export default function Home() {
   const [products, setProducts] = useState([])
   const [trending, setTrending] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchAll = async () => {
+      setLoading(true)
+
+      const [homeRes, trendingRes] = await Promise.all([
+        api.get("/api/products/home"),
+        api.get("/api/products/home/trending")
+      ])
+
+      setProducts(homeRes.data.products)
+      setTrending(trendingRes.data.products)
+
+      setLoading(false)
+    }
+
+    fetchAll()
+  }, [])
   
-  useEffect(() => {
-    const fetchHomeProducts = async () => {
-      const res = await api.get("/api/products/home")
-      setProducts(res.data.products)
-    }
-    fetchHomeProducts()
-  }, [])
 
 
-  useEffect(() => {
-    const fetchTrendingProducts = async () => {
-      const res = await api.get("/api/products/home/trending")
-      setTrending(res.data.products)
-    }
-
-    fetchTrendingProducts()
-  }, [])
+  if(loading) return <Loader />
 
   return (
     <div>
