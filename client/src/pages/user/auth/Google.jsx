@@ -8,6 +8,7 @@ import toast, { LoaderIcon } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import Loader from '../../../components/Loader'
+import Spinner from '../../../components/Spinner'
 
 export default function Google() {
   const dispatch = useDispatch()
