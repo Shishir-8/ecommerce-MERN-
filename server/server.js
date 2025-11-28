@@ -52,5 +52,20 @@ app.use("/api/admin", adminRoutes)
 
 
 
+
+app.get("/keep-alive", (req, res) => {
+  res.send("OK")
+})
+
+setInterval(()=> {
+    fetch("https://ecommerce-rxfo.onrender.com/keep-alive")
+    .then(()=> console.log("Server awake"))
+    .catch(() => console.error("Ping failed"))
+    
+}, 5 * 60 * 1000 )
+
+
+
+
 const PORT = 3000
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
