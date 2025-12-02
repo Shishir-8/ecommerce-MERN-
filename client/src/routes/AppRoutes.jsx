@@ -15,6 +15,8 @@ import AdminProducts from "../pages/admin/pages/AdminProducts";
 import AdminUsers from "../pages/admin/pages/AdminUsers";
 import AdminOrders from "../pages/admin/pages/AdminOrders";
 import AddProduct from "../pages/admin/pages/AddProduct";
+import AboutPage from "../pages/user/About";
+import ContactPage from "../pages/user/ContactPage";
 
 
 
@@ -24,14 +26,12 @@ const router = createBrowserRouter([
         children: [
             {path: "/", element: <Home />},
             {path:"/products", element: <ProductPage />},
+            {path: "/about", element: <AboutPage />},
+            {path: "/contact", element: <ContactPage />},
 
             {
                 path: "/cart",
-                element: (
-                    <ProtectedRoute>
-                        <CartPage />
-                    </ProtectedRoute>
-                )
+                element: <CartPage />
             },
             {
                 path:"/checkout",

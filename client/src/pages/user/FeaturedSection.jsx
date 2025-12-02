@@ -26,11 +26,11 @@ const products = [
 
 const FeaturedSection = () => {
   return (
-    <section className="mt-16">
+    <section className="mb-20 bg-gray-100 p-12">
       {/* Section Header */}
       <div className="flex flex-col items-center text-center">
-        <h2 className="text-3xl md:text-4xl font-semibold text-gray-800">
-          Featured Products
+           <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">
+          Featured Sections
         </h2>
         <div className="w-30 h-1 bg-orange-600 mt-2 rounded-full"></div>
       </div>

@@ -85,7 +85,7 @@ export default function Register() {
           </div>
         )}
       </div>
-      <div className="bg-white rounded-lg shadow-xl p-6 w-full mx-auto max-w-md">
+      <div className="bg-white border border-gray-200  rounded-xl shadow-xl p-6 w-full mx-auto max-w-md">
 
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold text-gray-800">Create Account</h1>

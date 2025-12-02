@@ -1,130 +1,196 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { FiShoppingCart } from "react-icons/fi";
+import { RxHamburgerMenu, RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { clearUser } from "../redux/slice/authSlice";
 import Loader from "./Loader";
-
-
-
+import SearchBar from "./SearchBar";
 
 export default function Header() {
+  const { items } = useSelector((state) => state.cart);
+  const totalCount = items.length;
 
-  const {items} = useSelector((state) => state.cart)
-  const totalCount = items.length
- 
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [search, setSearch] = useState("")
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const { user, loading } = useSelector((state) => state.auth)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const { user, loading } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const handleLogout = async () => {
     try {
-      await signOut(auth)
-      dispatch(clearUser())
-      toast.success("Logout succesfully")
+      await signOut(auth);
+      dispatch(clearUser());
+      toast.success("Logout successfully");
     } catch (error) {
-      toast.error("Failed to logout")
+      toast.error("Failed to logout");
     }
-  }
+  };
 
+  if (loading) return <Loader />;
 
-  const handleKeySearch = (e) => {
-
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (search.trim()) {
-        navigate(`/products?search=${encodeURIComponent(search)}`)
-        setSearch("")
-      }
-    }
-  }
-
-  if (loading) {
-  return <Loader />
-}
-
+  const navLinks = [
+    { label: "Home", path: "/" },
+    { label: "Products", path: "/products" },
+    { label: "Contact", path: "/contact" },
+    { label: "About", path: "/about" },
+  ];
 
   return (
-    <>
-      <nav className="w-full py-3 bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
-        <div className="container mx-auto flex items-center justify-between px-4 py-3">
+    <nav className="w-full py-4 bg-white sticky top-0 z-50 shadow">
+      <div className="container mx-auto flex items-center justify-between px-4">
 
-          {/* Left: Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-gray-800">E-comm</span>
+        {/* LOGO */}
+        <Link to="/" className="flex items-center">
+          <span className="text-3xl font-extrabold text-orange-500 tracking-wide">
+            Mini-Shop
+          </span>
+        </Link>
+
+        {/* DESKTOP NAV */}
+        <ul className="hidden lg:flex items-center gap-10 text-[17px]">
+          {navLinks.map((link, i) => (
+            <li key={i}>
+              <NavLink
+                to={link.path}
+                className={({ isActive }) =>
+                  `relative group transition-all duration-200 ${
+                    isActive ? "text-orange-600" : "text-gray-800"
+                  }`
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    <span>{link.label}</span>
+                    <span
+                      className={`absolute left-0 -bottom-1 h-[2.5px] bg-orange-600 transition-all duration-300 
+                      ${isActive ? "w-full" : "w-0 group-hover:w-full"}`}
+                    />
+                  </>
+                )}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+
+        {/* RIGHT SIDE BUTTONS */}
+        <div className="flex items-center gap-6">
+
+          {/* SEARCH */}
+          <div className="hidden lg:block">
+            <SearchBar />
+          </div>
+
+          {/* CART */}
+          <Link to="/cart" className="relative">
+            <FiShoppingCart
+              size={26}
+              className="text-gray-700 hover:text-orange-600 transition"
+            />
+            <span className="absolute -top-3 -right-2 bg-orange-600 text-white text-xs px-2 rounded-full">
+              {totalCount}
+            </span>
           </Link>
 
-          {/* Center: Search Box */}
-          <div className="hidden md:flex items-center bg-gray-100 rounded-full px-3 py-2 w-1/2">
-            <CiSearch size={18} className="text-gray-500 mr-2" />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onKeyDown={handleKeySearch}
-              placeholder="Search for products, brands, and more..."
-              className="bg-transparent w-full outline-none text-sm text-gray-700"
-            />
-          </div>
-
-          {/* Right: Cart + My Account */}
-          <div className="flex items-center gap-5 relative">
-            <Link to={"/cart"} className="relative">
-              <FiShoppingCart size={22} className="text-gray-700 hover:text-blue-600 transition" />
-              <span className="absolute -top-3 -right-2 bg-orange-600 text-white text-xs px-1.5 rounded-full">
-                {totalCount}
-              </span>
+          {/* ACCOUNT */}
+          {!user ? (
+            <Link
+              to="/signin"
+              className="hidden lg:block px-5 py-2 rounded-full text-gray-800 font-medium border border-gray-300 hover:shadow-md"
+            >
+              My Account
             </Link>
-
-            {!user ? (
-              <Link
-                to={"/signin"}
-                className="px-4 py-2 text-gray-600 rounded-full flex items-center gap-2 text-md font-medium transition hover:bg-gray-100"
+          ) : (
+            <div className="relative hidden lg:block">
+              <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="w-11 h-11 rounded-full overflow-hidden border-2 border-orange-400 hover:border-orange-600"
               >
-                My Account
-              </Link>
-            ) : (
-              <div className="relative">
-                <button
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 hover:border-blue-500 transition"
-                >
-                  <img
-                    src="https://cdn-icons-png.flaticon.com/128/3135/3135715.png"
-                    alt={user.name || "User"}
-                    className="w-full h-full object-cover"
-                  />
-                </button>
+                <img
+                  src="https://cdn-icons-png.flaticon.com/128/3135/3135715.png"
+                  alt="User"
+                  className="w-full h-full object-cover"
+                />
+              </button>
 
-                {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg py-2 z-50">
-                    <p className="px-4 py-2 text-gray-700 font-semibold truncate">{user.email}</p>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-
-                {
-                  dropdownOpen && (
-                    <div onClick={()=> setDropdownOpen(false)} className="fixed inset-0 z-40"></div>
-                  )
-                }
-              </div>
-            )}
-          </div>
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-3 w-48 bg-white border border-orange-200 rounded-xl shadow-xl py-3 z-50">
+                  <p className="px-4 py-2 text-gray-700 font-medium truncate">
+                    {user.email}
+                  </p>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-gray-800 hover:bg-orange-100 rounded-md"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+          
+          {/* MOBILE MENU BUTTON */}
+          <button
+            className="lg:hidden text-3xl text-gray-800"
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            {mobileOpen ? <RxCross2 /> : <RxHamburgerMenu />}
+          </button>
         </div>
-      </nav>
-    </>
+      </div>
+
+      {/* MOBILE MENU DROPDOWN */}
+      {mobileOpen && (
+        <div className="lg:hidden bg-white  py-4 px-6 space-y-5 animate-fadeIn">
+
+          {/* Search in Mobile */}
+          <SearchBar />
+
+          {/* Links */}
+          <ul className="flex flex-col  gap-4 text-lg font-medium">
+            {navLinks.map((link, i) => (
+              <NavLink
+                key={i}
+                to={link.path}
+                onClick={() => setMobileOpen(false)}
+                className={({ isActive }) =>
+                  `py-2 ${isActive ? "text-orange-600" : "text-gray-800"}`
+                }
+              >
+                {link.label}
+              </NavLink>
+            ))}
+          </ul>
+
+          {/* ACCOUNT + LOGOUT (Mobile) */}
+          {!user ? (
+            <Link
+              to="/signin"
+              className="block w-full text-center py-2 border rounded-lg text-gray-800 font-medium"
+              onClick={() => setMobileOpen(false)}
+            >
+              My Account
+            </Link>
+          ) : (
+            <div className="flex flex-col gap-3">
+              <p className="text-gray-700 font-medium">{user.email}</p>
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setMobileOpen(false);
+                }}
+                className="w-full py-2 text-left font-medium text-red-600 border border-red-300 rounded-lg"
+              >
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+    </nav>
   );
 }

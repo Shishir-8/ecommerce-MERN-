@@ -8,18 +8,21 @@ import cartReducer from "./slice/cartSlice"
 import orderReducer from "./slice/orderSlice"
 import buyNowReducer from "./slice/buyNowSlice"
 import {persistReducer, persistStore} from "redux-persist"
+import productReducer from "./slice/productSlice"
 
 
 const persistConfig = {
   key: "root",
   storage,
+  whitelist: ["cart"]
 }
 
 const rootReducer = combineReducers({
    auth: authReducer,
     cart: cartReducer,
     order: orderReducer,
-    buyNow: buyNowReducer
+    buyNow: buyNowReducer,
+    products: productReducer
   
 })
 
